@@ -1,47 +1,41 @@
-import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PokemonCard from "./Components/PokemonCard";
+import axios from "axios";
+// import SearchBar from "./Components/SearchBar";
 
 function App() {
-  const [pokemon, setPokemon] = useState("");
+  // const [searchedPokemon, setSearchedPokemon] = useState("");
+  const [textInput, setTextInput] = useState("");
   const [pokemonData, setPokemonData] = useState("");
-
-  async function getPokemon() {
-    try {
-      const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
-      const res = await fetch(url);
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  function handleChange(e) {
-    setPokemon(e.target.value.toLowerCase());
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await getPokemon();
+    const searchedPokemon = textInput;
+    const url = `https://pokeapi.co/api/v2/pokemon/${searchedPokemon}`;
+    await axios.get(url).then((res) => {
+      setPokemonData(res.data);
+      console.log(res.data);
+    });
   }
 
   return (
     <div>
       <h1>Poke-tracker</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+      <div className="searchBar">
+        <form onSubmit={handleSubmit}>
+          <label>Enter Pokémon</label>
           <input
             type="text"
-            onChange={handleChange}
-            placeholder="Enter Pokemon name"
+            required
+            value={textInput}
+            onChange={(e) => setTextInput(e.target.value.toLowerCase())}
           />
-        </label>
-      </form>
-      <div>
-        <p>
-          Data:
-          {pokemonData}
-        </p>
+          <button>Search Pokémon </button>
+          <p>{textInput}</p>
+          <p>{pokemonData.base_experience}</p>
+        </form>
       </div>
+      <PokemonCard pokemonData={pokemonData} />
     </div>
   );
 }
