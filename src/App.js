@@ -14,13 +14,12 @@ function App() {
     const url = `https://pokeapi.co/api/v2/pokemon/${searchedPokemon}`;
     await axios.get(url).then((res) => {
       setPokemonData(res.data);
-      console.log(res.data);
     });
   }
 
   return (
     <div>
-      <h1>Poke-tracker</h1>
+      <h1 class="mainHeadings">Poke-tracker</h1>
       <div className="searchBar">
         <form onSubmit={handleSubmit}>
           <label>Enter Pokémon</label>
@@ -31,11 +30,9 @@ function App() {
             onChange={(e) => setTextInput(e.target.value.toLowerCase())}
           />
           <button>Search Pokémon </button>
-          <p>{textInput}</p>
-          <p>{pokemonData.base_experience}</p>
         </form>
       </div>
-      <PokemonCard pokemonData={pokemonData} />
+      {pokemonData && <PokemonCard pokemonData={pokemonData} />}
     </div>
   );
 }
